@@ -1,7 +1,6 @@
 import 'package:epilepsy_app/login.dart';
 import 'package:epilepsy_app/signup.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

@@ -26,7 +26,7 @@ class LoginPage extends StatelessWidget{
                         width: double.infinity,
                         height: double.infinity,
                       ),
-                      const Align(alignment: Alignment(0,-0.5),child: Text('Epilepsy app',style: TextStyle(color: Colors.white,fontSize: 20),textAlign: TextAlign.center,)),
+                      const Align(alignment: Alignment(0,-0.5),child: Text('Epilepsy Support',style: TextStyle(color: Colors.white,fontSize: 20),textAlign: TextAlign.center,)),
                     ]
                   ),
                 ),
