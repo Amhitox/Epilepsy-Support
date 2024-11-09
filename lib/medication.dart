@@ -65,6 +65,7 @@ int _medccount = 0;
     _storemeds = List.generate(_medccount, (index) => {});
   }
   void showCustomDialog(BuildContext context) {
+  final theme = Theme.of(context);
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -74,115 +75,104 @@ int _medccount = 0;
         ),
         child: Container(
           constraints: const BoxConstraints(maxHeight: 400),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Add Medication',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.purple,
-                      ),
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Add Medication',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.close, color: Colors.grey),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: theme.colorScheme.onSurfaceVariant),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _nameController,
+                decoration: InputDecoration(
+                  labelText: 'Medication Name',
+                  filled: true,
+                  fillColor: theme.colorScheme.surfaceVariant,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: Icon(Icons.medication, color: theme.colorScheme.primary),
                 ),
-                const SizedBox(height: 20),
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Medication Name',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    prefixIcon: const Icon(Icons.medication, color: Colors.purple),
+              ),
+              const SizedBox(height: 15),
+              TextField(
+                controller: _dosageController,
+                decoration: InputDecoration(
+                  labelText: 'Dosage (mg)',
+                  filled: true,
+                  fillColor: theme.colorScheme.surfaceVariant,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: Icon(Icons.scale, color: theme.colorScheme.primary),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 15),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.all(15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                const SizedBox(height: 15),
-                TextField(
-                  controller: _dosageController,
-                  decoration: InputDecoration(
-                    labelText: 'Dosage',
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                    prefixIcon: const Icon(Icons.scale, color: Colors.purple),
-                  ),
+                onPressed: () async {
+                  TimeOfDay? pickedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (pickedTime != null) {
+                    _timeController.text = pickedTime.format(context);
+                  }
+                },
+                icon: Icon(Icons.access_time, color: theme.colorScheme.primary),
+                label: Text(
+                  'Select Time',
+                  style: TextStyle(color: theme.colorScheme.primary),
                 ),
-                const SizedBox(height: 15),
-                ElevatedButton(
+              ),
+              const SizedBox(height: 25),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[100],
+                    backgroundColor: theme.colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () async {
-                    TimeOfDay? pickedTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (pickedTime != null) {
-                      _timeController.text = pickedTime.format(context);
-                    }
+                  onPressed: () {
+                    addMedication();
+                    Navigator.pop(context);
                   },
-                  child:const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.access_time, color: Colors.purple),
-                      SizedBox(width: 8),
-                      Text(
-                        'Select Time',
-                        style: TextStyle(color: Colors.black87),
-                      ),
-                    ],
+                  child: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 25),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purple,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onPressed: () {
-                          addMedication();
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
@@ -195,164 +185,180 @@ int _medccount = 0;
   Widget build(BuildContext context) {
     List<DateTime> weekDates = getWeekDates();
     List<String> daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
+    final theme = Theme.of(context);
 
     return Scaffold(
-      body:SafeArea(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
         child: SingleChildScrollView(
-              child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(weekDates.length, (index) {
-                      bool isSelected = index == selectedIndex;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedIndex = index;
-                          });
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              daysOfWeek[index],
-                              style: const TextStyle(
-                                color: Colors.purple,
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.deepPurple.shade400, Colors.deepPurple.shade300],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Medication Schedule',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      '${_medccount} medications today',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: List.generate(weekDates.length, (index) {
+                    bool isSelected = index == selectedIndex;
+                    return GestureDetector(
+                      onTap: () => setState(() => selectedIndex = index),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            daysOfWeek[index],
+                            style: TextStyle(
+                              color: Colors.deepPurple.shade300,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: isSelected ? Colors.deepPurple : Colors.transparent,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isSelected ? Colors.transparent : Colors.deepPurple.withOpacity(0.3),
+                              ),
+                            ),
+                            child: Text(
+                              weekDates[index].day.toString(),
+                              style: TextStyle(
+                                color: isSelected ? Colors.white : Colors.deepPurple,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                color: isSelected ? Colors.brown : Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                weekDates[index].day.toString(),
-                                style: TextStyle(
-                                  color: isSelected ? Colors.white : Colors.black,
-                                  fontSize: 16,
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ),
+              Column(
+                children: List.generate(_medccount, (index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colors.deepPurple.shade500, Colors.deepPurple.shade700],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                _storemeds[index]['time'],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              PopupMenuButton(
+                                icon: const Icon(Icons.more_vert, color: Colors.white),
+                                itemBuilder: (context) => [
+                                  const PopupMenuItem(child: Text('Edit')),
+                                  const PopupMenuItem(child: Text('Delete')),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            _storemeds[index]['name'],
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
                             ),
-                          ],
-                        ),
-                      );
-                    }),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Dosage: ${_storemeds[index]['dosage']} mg',
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                const Divider(color: Colors.white,thickness: 4,),
-                const SizedBox(height: 20,),
-                const Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                  Text('Time',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),),
-                  SizedBox(width: 50,),
-                  Text('Medication',style: TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),),
-                  SizedBox(width: 50,),
-                  ],
-                ),
-                const SizedBox(height: 20,),
-                Column(
-                  children: [
-                    ...List.generate(_medccount, (index) => Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Card(
-                          color: Colors.transparent,
-                          elevation: 0,
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(_storemeds[index]['time'],style: const TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),),
-                            )
-                          ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.15,
-                          margin: const EdgeInsets.symmetric(horizontal: 20),
-                          child: const VerticalDivider(
-                          width: 5,
-                          color: Colors.pink,
-                          ),
-                        ),
-                        Card(
-                          key: _cardKeys[index],
-                          color: Colors.white,
-                          elevation: 10,
-                          child: SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(3),
-                                    child: IconButton(
-                                      onPressed: () {
-                                          final RenderBox renderBox = _cardKeys[index].currentContext!.findRenderObject() as RenderBox;
-                                          final Offset offset = renderBox.localToGlobal(Offset.zero);
-                                          const double buttonWidth = 48.0; // Approximate width of the IconButton
-                                          final RelativeRect position = RelativeRect.fromLTRB(
-                                            offset.dx + renderBox.size.width - buttonWidth, // Align to the right edge of the card
-                                            offset.dy,
-                                            offset.dx + renderBox.size.width,
-                                            offset.dy + renderBox.size.height,
-                                          );
-                                        showMenu(
-                                          context: context,
-                                          position: position,
-                                          items: [
-                                            PopupMenuItem(
-                                              value: 'edit',
-                                              child: const Text('Edit'),
-                                              onTap: () {},
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'delete',
-                                              child: const Text('Delete'),
-                                              onTap: () {},
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                      icon: const Icon(Icons.more_vert, color: Colors.black,),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: Column(
-                                      children: [
-                                        Text(_storemeds[index]['name']  ,style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                        Text('Dosage : ${_storemeds[index]['dosage']} mg',style: const TextStyle(fontSize: 14,fontWeight: FontWeight.normal),),
-                                        const Text('Frequency : 2 times a day',style: TextStyle(fontSize: 14,fontWeight: FontWeight.normal),),
-                                      ]
-                                    ),
-                                  )
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
-                  ]
-                )
-              ],
-            ),
+                )),
+              ),
+            ],
           ),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){showCustomDialog(context);},child: const Icon(Icons.add),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showCustomDialog(context),
+        backgroundColor: Colors.deepPurple,
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
     );
   }
 }

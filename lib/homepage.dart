@@ -34,131 +34,149 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Align(alignment: Alignment(-1, -0.7),child: Padding(padding: EdgeInsets.all(10),child: Text('Welcome back, User!',style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),))),
-              const SizedBox(height: 15),
+              // Header with Profile
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hello,',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: theme.colorScheme.onPrimary.withOpacity(0.7),
+                              ),
+                            ),
+                            Text(
+                              'Sir Amhita',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.onPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        CircleAvatar(
+                          radius: 25,
+                          backgroundColor: theme.colorScheme.onPrimary.withOpacity(0.2),
+                          child: Icon(Icons.person, color: theme.colorScheme.onPrimary),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // Quick Actions
+              Container(
+                height: 120,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    _buildQuickActionCard(
+                      context,
+                      icon: Icons.add_circle_outline,
+                      title: 'Record\nSeizure',
+                      onTap: () => widget.onScreenChange(2),
+                    ),
+                    _buildQuickActionCard(
+                      context,
+                      icon: Icons.medication_outlined,
+                      title: 'Add\nMedication',
+                      onTap: () => widget.onScreenChange(1),
+                    ),
+                    _buildQuickActionCard(
+                      context,
+                      icon: Icons.contact_phone_outlined,
+                      title: 'Emergency\nContacts',
+                      onTap: () => widget.onScreenChange(3),
+                    ),
+                    _buildQuickActionCard(
+                      context,
+                      icon: Icons.note_add_outlined,
+                      title: 'Add\nNotes',
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ),
+
+              // Stats Overview
               Padding(
-                padding:
-                    const EdgeInsets.only(top: 8.0, left: 25.0, right: 25.0, bottom: 8.0),
-                child: Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        offset: const Offset(12, 26),
-                        blurRadius: 50,
-                        spreadRadius: 0,
-                        color: Colors.grey.withOpacity(.1)),
-                  ]),
-                  child: TextField(
-                    onChanged: (value) {
-                      
-                    },
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Search',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      contentPadding:
-                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2.0),
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _buildStatCard(
+                        context,
+                        'Today\'s\nSeizures',
+                        '2',
+                        Icons.warning_amber_rounded,
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: _buildStatCard(
+                        context,
+                        'Medications\nTaken',
+                        '3/4',
+                        Icons.medication,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 30),
-              Card(
-                color: Colors.deepPurple,
-                elevation: 5,
-                child: SizedBox(
-                  height: 150,
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(padding: const EdgeInsets.all(3),margin: const EdgeInsets.fromLTRB(25, 5, 15, 0),decoration: BoxDecoration(shape: BoxShape.circle,border: Border.all(color: Colors.white)),child: Image.asset('assets/images/brain_icon.png',width: MediaQuery.of(context).size.width * 0.15,)),
-                          //const SizedBox(width: 10,),
-                          const Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('Total Seizures',style: TextStyle(fontSize: 24,color: Colors.white),),
-                              SizedBox(height: 5),
-                              Text('States about seizures',style: TextStyle(fontSize: 12,color: Colors.white,fontWeight: FontWeight.w100),),
-                            ],
-                          )
-                        ],
-                      ),
-                      SizedBox(width: MediaQuery.of(context).size.width*0.6,child: const Divider(thickness: 0.7,)),
-                      //const SizedBox(height: 10,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(padding: const EdgeInsets.all(3),margin: const EdgeInsets.fromLTRB(15, 5, 15, 0),child: const Text('30',style: TextStyle(fontSize: 23,color: Colors.white))),
-                          SizedBox(width: MediaQuery.of(context).size.width*0.5),
-                          IconButton(onPressed: () {
-                            //navigate to Seizures page
-                          },icon: const Icon(Icons.arrow_forward),color: Colors.white,),
-                        ],
-                      )
-                    ],
+
+              // Activity Chart
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Card(
-                color: Colors.white,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  child: Column(
-                    children: [
-                      Container(margin: const EdgeInsets.fromLTRB(20, 10, 0, 0),child: const Align(alignment: Alignment.centerLeft,child: Text('Seizure Activity',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22),))),
-                      const SizedBox(height: 5),
-                      ToggleButtons(
-                        isSelected: toggls,
-                        children: const [
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('Week'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Weekly Activity',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('Month'),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            child: Text('All Time'),
-                          ),
-                        ],
-                        onPressed: (int index) {
-                          setState(() {
-                            // The button that is tapped is set to true, and the others to false.
-                            for (int i = 0; i < toggls.length; i++) {
-                              toggls[i] = i == index;
-                            }
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16), // Add padding for some spacing
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: 200,
                           child: LineChart(
                             LineChartData(
                               borderData: FlBorderData(show: false), // Hide borders
@@ -242,31 +260,136 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(height: 5,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Column(
-                    children: [
-                      Text('Swipe left to ',style: TextStyle(fontSize: 18,color: Colors.black)),
-                      Text('join our comunity ...',style: TextStyle(fontSize: 18,color: Colors.black)),
-                    ],
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width*0.15),
-                  AnimatedBuilder(animation: _controller, builder: (context,child){
-                    return Transform.translate(offset: Offset(20 * _controller.value,0),child: child);
-                  },
-                  child: const Icon(Icons.arrow_forward,color: Colors.deepPurple,size: 50,)
-                  ),
-                ],
+
+              // Upcoming Medications
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Upcoming Medications',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onBackground,
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    _buildMedicationItem(context, 'Medication A', '9:00 AM'),
+                    _buildMedicationItem(context, 'Medication B', '2:00 PM'),
+                  ],
+                ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActionCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          width: 100,
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: theme.colorScheme.primary),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatCard(
+    BuildContext context,
+    String title,
+    String value,
+    IconData icon,
+  ) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(height: 15),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMedicationItem(
+    BuildContext context,
+    String name,
+    String time,
+  ) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
+          child: Icon(Icons.medication, color: Theme.of(context).colorScheme.onBackground),
+        ),
+        title: Text(name),
+        subtitle: Text(time),
+        trailing: IconButton(
+          icon: const Icon(Icons.check_circle_outline),
+          onPressed: () {},
         ),
       ),
     );
