@@ -46,7 +46,7 @@ To run this app locally, follow these steps:
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/yourusername/epilepsy-support-app.git
+    git clone https://github.com/Amhitox/epilepsy-support-app.git
     cd epilepsy-support-app
     ```
 
